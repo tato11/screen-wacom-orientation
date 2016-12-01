@@ -2,6 +2,8 @@ What is it?
 ===========
 This is a small script to easily rotate your screen along all the devices that depends on the screen orientatio, like and Stylus or a touch screen. And like with any script, please be careful, remember it is your responsability from here on.
 
+I must add that I based this code from a fix mentionen on a blog which can't remember at the time, then adapt it to my needs to create this script, so thank you very much to whoever write that post I can't link because I can't remember :D
+
 
 How to configure
 ================
