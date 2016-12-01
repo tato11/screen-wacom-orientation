@@ -1,0 +1,109 @@
+#!/bin/sh
+
+
+param=$1
+step=1
+orientation=0
+
+
+# ====== Begin Device Name Variable Section ======
+# Use xinput command to find out your device names and replace the names here
+device_stylus="Stylus device name here"
+device_eraser="Eraser device name here"
+device_touch="Touch device name here"
+# ====== End Device Name Variable Section ======
+
+
+case "$param" in
+    -upside)
+    step=2
+    ;;
+    -ccw)
+    step=-1
+    ;;
+    -h|--help)
+cat <<EOF
+
+  Description:
+    This script will rotate counterclockwise the screen as well as any
+    configured wacom device.
+
+  Usage:
+EOF
+    echo "    $0 [options]"
+cat <<EOF
+
+  Help:
+    -h, --help               print this message
+
+  Standar Options:
+    -ccw                     Rotate clockwise
+    -upside                  Invert current orientation
+
+EOF
+    exit 0
+    ;;
+esac
+
+
+# Find the line in "xrandr -q --verbose" output that contains current screen orientation and "strip" out current orientation.
+rotation="$(xrandr -q --verbose | grep 'connected' | egrep -o  '\) (normal|left|inverted|right) \(' | egrep -o '(normal|left|inverted|right)')"
+
+# Using current screen orientation numeric equivalent.
+case "$rotation" in
+    normal)
+    orientation=0
+    ;;
+    left)
+    orientation=1
+    ;;
+    inverted)
+    orientation=2
+    ;;
+    right)
+    orientation=3
+    ;;
+esac
+
+
+# Get new orientation
+orientation=$((orientation + step))
+
+
+# ====== Begin Rotation Screen Section ======
+# Rotate screen and input devices to the selected orientation
+case "$orientation" in
+    0|4)
+    # rotate to normal
+    xrandr -o normal
+    xsetwacom set "$device_stylus" rotate none
+    xsetwacom set "$device_eraser" rotate none
+    xsetwacom set "$device_touch" rotate none
+    echo "Rotate to normal orientation... Done"
+    ;;
+    1|5)
+    # rotate to the left
+    xrandr -o left
+    xsetwacom set "$device_stylus" rotate ccw
+    xsetwacom set "$device_eraser" rotate ccw
+    xsetwacom set "$device_touch" rotate ccw
+    echo "Rotate to left orientation... Done"
+    ;;
+    2|-2)
+    # rotate to inverted
+    xrandr -o inverted
+    xsetwacom set "$device_stylus" rotate half
+    xsetwacom set "$device_eraser" rotate half
+    xsetwacom set "$device_touch" rotate half
+    echo "Rotate to inverted orientation... Done"
+    ;;
+    3|-1)
+    # rotate to the right
+    xrandr -o right
+    xsetwacom set "$device_stylus" rotate cw
+    xsetwacom set "$device_eraser" rotate cw
+    xsetwacom set "$device_touch" rotate cw
+    echo "Rotate to right orientation... Done"
+    ;;
+esac
+# ====== End Rotation Screen Section ======
