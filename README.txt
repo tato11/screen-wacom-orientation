@@ -11,7 +11,8 @@ Copy the sample file from "./screen_wacom_orientation/doc/screen-wacom-orientati
 
 The first step is to find and set your devices that depends on your screen orientation like an Stylus or your Touch screen. To do this we need to open the script file that we just copy from the sample "screen-wacom-orientation" and search for these lines:
 
-  # Use xinput command to find out your device names and replace the names here
+  # Use "xinput" command on Xorg or "xsetwacom --list" command on Wayland to find out
+  # your device names and replace the names here
   device_stylus="Stylus device name here"
   device_eraser="Eraser device name here"
   device_touch="Touch device name here"
